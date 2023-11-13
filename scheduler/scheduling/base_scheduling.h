@@ -34,7 +34,7 @@ class base_scheduling{
             linked_list<int> miss_jobs;
             for(auto i = jobs.begin(); i != jobs.end(); i=i->next_node){
                 if(i->t.absolute_deadline - clock  < i->t.remain_execution_time){
-                    std::cout<<"job"<<i->t.TID << " will miss deadline\n";
+                    std::cout<<"Clock "<<clock<<" T"<<i->t.TID << " will miss deadline on Clock "<<i->t.absolute_deadline<<"\n";
                     miss_jobs.push_back(idx);
                     miss_cnt += 1;
                 }

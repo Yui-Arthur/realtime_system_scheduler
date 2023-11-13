@@ -18,7 +18,6 @@ RM_scheduling::RM_scheduling(linked_list<periodic_task> tasks) : base_scheduling
 
         sorted_tasks.insert_idx(idx , i->t);
     }
-
     int idx=0;
     for(auto i = sorted_tasks.begin(); i!=sorted_tasks.end(); i=i->next_node, idx+=1){
         task_priority[i->t.TID] = idx;
@@ -62,7 +61,7 @@ int RM_scheduling::check_miss_deadline(int clock){
         for(auto j=RM_ready_queue[i].begin(); j!=RM_ready_queue[i].end() ; j=j->next_node, idx+=1){
             if(j->t.absolute_deadline - clock  < j->t.remain_execution_time){
                 // std::cout<<clock<<" "<<j->t.absolute_deadline<<" "<<j->t.remain_execution_time<<"\n";
-                std::cout<<"Clock"<<clock<<" T"<<j->t.TID << " will miss deadline\n";
+                std::cout<<"Clock "<<clock<<" T"<<j->t.TID << " will miss deadline on Clock "<<j->t.absolute_deadline<<"\n";
                 miss_jobs.push_back(idx);
                 miss_cnt += 1;
             }

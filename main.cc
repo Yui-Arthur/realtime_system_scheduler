@@ -10,7 +10,7 @@ using namespace std;
 
 int main(){
 
-    string task = "task_data/test4.txt";
+    string task = "task_data/test6.txt";
 
     scheduler<RM_scheduling> rm(task); 
     rm.start_scheduling();
