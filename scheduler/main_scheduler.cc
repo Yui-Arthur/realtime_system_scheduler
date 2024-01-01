@@ -4,11 +4,11 @@
 #include <iomanip>
 #include <sstream>
 
-template<class T> scheduler<T>::scheduler(std::string task_file){
-    read_task(task_file);
+template<class T> scheduler<T>::scheduler(std::string periodic_task_file){
+    read_periodic_task(periodic_task_file);
 };
 
-template<class T> void scheduler<T>::read_task(std::string task_file){
+template<class T> void scheduler<T>::read_periodic_task(std::string task_file){
     std::ifstream tasks_data(task_file); 
     std::string line_task , task_fragment;
     std::stringstream ss;
@@ -21,18 +21,18 @@ template<class T> void scheduler<T>::read_task(std::string task_file){
     while(std::getline(ss , task_fragment , ',')){
         task_info[cnt%4] = stoi(task_fragment);
         if(cnt%4 == 3)
-            task_info[4] = (cnt/4) , all_tasks.push_back(periodic_task(task_info));
+            task_info[4] = (cnt/4) , all_periodic_tasks.push_back(periodic_task(task_info));
         cnt += 1;
     }
     
     tasks_data.close();
 
-    // std::cout << all_tasks;
+    // std::cout << all_periodic_tasks;
 }
 
 template<class T> void scheduler<T>::start_scheduling(){
-    T scheduling(all_tasks);
-    if(!scheduling.schedulability_test(all_tasks)){
+    T scheduling(all_periodic_tasks);
+    if(!scheduling.schedulability_test(all_periodic_tasks)){
         std::cout<<"Schedulability Test Fail\n\n";
     }
 
@@ -74,10 +74,11 @@ template<class T> void scheduler<T>::start_scheduling(){
     save_scheduling(scheduled_results , end_clock ,scheduling.scheduling_method);
 }
 
+
 template<class T> int scheduler<T>::calculate_task_LCM(){
     int lcm = 1;
     int max_phase_time = -1;
-    for(auto i=all_tasks.begin(); i!=all_tasks.end(); i=i->next_node){
+    for(auto i=all_periodic_tasks.begin(); i!=all_periodic_tasks.end(); i=i->next_node){
         periodic_task t = i->t;
         lcm = lcm * t.period / gcd(lcm , t.period);
         max_phase_time = std::max(max_phase_time , t.phase_time);
@@ -95,7 +96,7 @@ template<class T> int scheduler<T>::gcd(int a , int b){
 template<class T> linked_list<job>* scheduler<T>::setting_periodic_task(int end_clock){
     linked_list<job>* s = new linked_list<job>[end_clock+1];
     
-    for(auto i=all_tasks.begin(); i!=all_tasks.end(); i=i->next_node){
+    for(auto i=all_periodic_tasks.begin(); i!=all_periodic_tasks.end(); i=i->next_node){
         int pred = i->t.period;
         for(int c=0; c<=end_clock; c++){
             if(c- i->t.phase_time >= 0 && (c- i->t.phase_time)%pred == 0){
@@ -126,7 +127,7 @@ template<class T> void scheduler<T>::visualize_scheduling(linked_list<job> perio
     for(int clock = 0; clock <= end_clock; clock++)
         std::cout<<std::left <<std::setw(5)<<clock;
     std::cout<<"\n\n";
-    for(int i=0;i<all_tasks.size();i++){
+    for(int i=0;i<all_periodic_tasks.size();i++){
         for(int clock = 0; clock <= end_clock; clock++){
             if(periodic_task_schedule[clock].size() >= i+1)
                 std::cout<<"T"<<periodic_task_schedule[clock][i].TID<<"   ";

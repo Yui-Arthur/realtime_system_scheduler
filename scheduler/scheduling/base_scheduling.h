@@ -6,7 +6,7 @@
 class base_scheduling{
     public:
         base_scheduling(){idle_job.TID = -1;};
-        base_scheduling(linked_list<periodic_task>& tasks){idle_job.TID = -1;};
+        base_scheduling(linked_list<periodic_task>& tasks){idle_job.TID = -1, idle_job.absolute_deadline = 1e9;};
         void push_job(job j) {jobs.push_back(j);};
         job* get_job(int clock) {
             remove_done_job();

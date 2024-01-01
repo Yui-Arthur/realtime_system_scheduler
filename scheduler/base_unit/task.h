@@ -21,6 +21,21 @@ struct periodic_task
     };
 };
 
+struct aperiodic_task
+{
+    int phase_time;
+    int execution_time;
+    int TID;
+    aperiodic_task() : phase_time(0), execution_time(0) , TID(0){;}; 
+    aperiodic_task(int *task_info) : phase_time(task_info[0]), execution_time(task_info[1]), TID(task_info[2]) {}; 
+    friend std::ostream& operator<<(std::ostream& os, const aperiodic_task &task_info){
+        os <<"AT" <<task_info.TID << ": \n"
+           <<std::left << std::setw(5) <<"  PT"<<"("<< task_info.phase_time <<")\n"
+           <<std::left <<std::setw(5) <<"  EXT"<<"("<< task_info.execution_time <<")\n\n";
+        return os; 
+    };
+};
+
 struct job
 {
     int release_time;
